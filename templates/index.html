@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Email Generator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+
+    <div class="container">
+        <h1>AI Email Generator</h1>
+        <p>Generate professional emails instantly with AI.</p>
+
+        <div class="input-group">
+            <input type="text" id="purpose" placeholder="Enter purpose of the email">
+            <button onclick="generateEmail()">Generate Email</button>
+        </div>
+
+        <div class="response-container">
+            <h3>📧 Response 1</h3>
+            <textarea id="email1" readonly></textarea>
+            <button class="copy-btn" onclick="copyToClipboard('email1', this)">Copy Response 1</button>
+        </div>
+
+        <div class="response-container">
+            <h3>📧 Response 2</h3>
+            <textarea id="email2" readonly></textarea>
+            <button class="copy-btn" onclick="copyToClipboard('email2', this)">Copy Response 2</button>
+        </div>
+    </div>
+
+    <script>
+        function generateEmail() {
+            let purpose = document.getElementById("purpose").value;
+
+            if (!purpose.trim()) {
+                alert("Please enter a purpose for the email.");
+                return;
+            }
+
+            fetch("/generate", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ purpose: purpose })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("email1").value = data.email1 || "Failed to generate response 1";
+                document.getElementById("email2").value = data.email2 || "Failed to generate response 2";
+            })
+            .catch(error => console.error("Error:", error));
+        }
+
+        function copyToClipboard(id, button) {
+            let textArea = document.getElementById(id);
+            textArea.select();
+            document.execCommand("copy");
+
+            // Change button text to "Copied!" temporarily
+            button.textContent = "Copied!";
+            setTimeout(() => {
+                button.textContent = "Copy Response";
+            }, 1500);
+        }
+    </script>
+
+</body>
+</html>
