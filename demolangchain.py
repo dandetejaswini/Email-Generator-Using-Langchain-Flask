@@ -23,3 +23,4 @@ try:
     print("\nGenerated Email:\n", response)
 except Exception as e:
     print("\nError generating response:", e)
+    
