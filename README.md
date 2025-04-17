@@ -24,7 +24,6 @@
 ## 📂 Project Structure
 ```
 EMAIL-GENERATOR-USING-LANGCHAIN/
-├── langchain.env         # Environment configuration
 ├── static/
 │   └── styles.css        # CSS stylesheet
 ├── templates/
