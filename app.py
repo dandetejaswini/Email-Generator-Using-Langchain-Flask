@@ -2,10 +2,17 @@
 from flask import Flask, render_template, request, jsonify
 import os
 from langchain_together import Together
+from dotenv import load_dotenv  # Add this import
+
+# Load environment variables from .env file
+load_dotenv()
 
 app = Flask(__name__)
 
-os.environ["TOGETHER_API_KEY"] = "43dee022a48d22c9b1652790927c306e26009b9e59b96fd8d977cbf88d241152"
+# Get API key from environment variables
+together_api_key = os.getenv("TOGETHER_API_KEY")
+if not together_api_key:
+    raise ValueError("TOGETHER_API_KEY not found in environment variables")
 
 @app.route("/")
 def index():
@@ -35,7 +42,12 @@ def generate_email():
     """
 
     try:
-        llm = Together(model="meta-llama/Llama-3.3-70B-Instruct-Turbo-Free", temperature=0.7, max_tokens=1000)
+        llm = Together(
+            model="meta-llama/Llama-3.3-70B-Instruct-Turbo-Free",
+            temperature=0.7,
+            max_tokens=1000,
+            together_api_key=together_api_key  # Pass the API key here
+        )
         response = llm.invoke(prompt)
 
         # Split response using "### Response 2:" as delimiter
